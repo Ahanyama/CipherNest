@@ -1,4 +1,3 @@
-
 // Display the next question
 function showNextQuestion() {
     if (currentQuestionIndex < 10) {
