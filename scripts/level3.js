@@ -1,168 +1,70 @@
-// Game Variables
-let level = 1;
-let questionCount = 0;
-let correctAnswers = 0;
-let currentQuestion = {};
-let questionsAnswered = 0;
+// Initialize the game state
+let currentLevel = 1;
+let currentQuestionIndex = 0;
+let totalQuestions = 10;
+let currentAnswer = null;
+let badges = ["Level 1 Badge 🎉", "Level 2 Badge 🏆", "Level 3 Badge 🥇", "Level 4 Badge 🎯", "Level 5 Badge 🏅"];
 
-// Elements
-const rollDiceButton = document.getElementById('roll-dice');
-const instructionsButton = document.getElementById('instructions-btn');
-const exitButton = document.getElementById('exit-btn');
-const levelDisplay = document.getElementById('level');
-const diceResult = document.getElementById('dice-result');
-const questionBox = document.getElementById('question-box');
-const questionElement = document.getElementById('question');
-const answerInput = document.getElementById('answer');
-const submitAnswerButton = document.getElementById('submit-answer');
-const feedbackElement = document.getElementById('feedback');
-const badgeElement = document.getElementById('badge');
-const instructionsPanel = document.getElementById('instructions-panel');
-const closeInstructionsButton = document.getElementById('close-instructions');
+// Instructions Panel
+document.getElementById("instructions-btn").addEventListener("click", function() {
+    document.getElementById("instructions-panel").style.display = "block";
+});
 
-// Question types
-const questionTypes = ['ADDITION', 'SUBTRACTION', 'MULTIPLICATION', 'DIVISION'];
+document.getElementById("close-instructions").addEventListener("click", function() {
+    document.getElementById("instructions-panel").style.display = "none";
+});
 
-// Set initial level display
-levelDisplay.innerHTML = `Level ${level}: ${questionTypes[level - 1]}`;
+// Dice Roll and Game Progression
+document.getElementById("roll-dice").addEventListener("click", function() {
+    let diceRoll = Math.floor(Math.random() * 6) + 1;
+    document.getElementById("dice-result").textContent = `You rolled a ${diceRoll}`;
 
-// Event listeners
-rollDiceButton.addEventListener('click', rollDice);
-instructionsButton.addEventListener('click', openInstructions);
-exitButton.addEventListener('click', exitGame);
-submitAnswerButton.addEventListener('click', submitAnswer);
-closeInstructionsButton.addEventListener('click', closeInstructions);
-
-// Function to open instructions modal
-function openInstructions() {
-    instructionsPanel.style.display = 'flex';
-}
-
-// Function to close instructions modal
-function closeInstructions() {
-    instructionsPanel.style.display = 'none';
-}
-
-// Function to handle the die roll and show a new question
-function rollDice() {
-    // Simulate a die roll (1 to 6)
-    const dieRoll = Math.floor(Math.random() * 6) + 1;
-    diceResult.textContent = `You rolled a ${dieRoll}`;
-
-    // Generate a new question based on the current level
-    generateQuestion(dieRoll);
-}
-
-// Function to generate questions based on level and die roll
-function generateQuestion(dieRoll) {
-    questionBox.style.display = 'block';
-    const num1 = Math.floor(Math.random() * 10) + 1;
-    const num2 = Math.floor(Math.random() * 10) + 1;
-
-    // Based on the level, generate different question types
-    switch (level) {
-        case 1: // Level 1: Addition
-            currentQuestion = {
-                question: `${num1} + ${num2}`,
-                answer: num1 + num2
-            };
-            break;
-        case 2: // Level 2: Subtraction
-            currentQuestion = {
-                question: `${num1} - ${num2}`,
-                answer: num1 - num2
-            };
-            break;
-        case 3: // Level 3: Multiplication
-            currentQuestion = {
-                question: `${num1} * ${num2}`,
-                answer: num1 * num2
-            };
-            break;
-        case 4: // Level 4: Division
-            currentQuestion = {
-                question: `${num1 * num2} ÷ ${num2}`,
-                answer: num1
-            };
-            break;
-        default:
-            currentQuestion = { question: 'Error', answer: 'N/A' };
-    }
-
-    // Display the question
-    questionElement.textContent = `Question ${questionCount + 1}: ${currentQuestion.question}`;
-    questionCount++;
-
-    // Reset answer input and feedback
-    answerInput.value = '';
-    feedbackElement.textContent = '';
-}
-
-// Function to submit answer and check it
-function submitAnswer() {
-    const userAnswer = parseInt(answerInput.value);
-    if (userAnswer === currentQuestion.answer) {
-        correctAnswers++;
-        feedbackElement.textContent = 'Correct! Moving to the next question.';
-        feedbackElement.style.color = 'green';
+    if (currentQuestionIndex < totalQuestions) {
+        showQuestion();
     } else {
-        feedbackElement.textContent = `Incorrect! The correct answer is ${currentQuestion.answer}.`;
-        feedbackElement.style.color = 'red';
-    }
-
-    // Move to next question after a small delay
-    setTimeout(() => {
-        if (questionCount === 10) {
-            completeLevel();
-        } else {
-            rollDice();
+        // Level completed
+        if (currentLevel <= 5) {
+            document.getElementById("badge").style.display = "block";
+            document.getElementById("badge").textContent = badges[currentLevel - 1];  // Show unique badge for current level
+            currentLevel++;  // Move to next level
+            currentQuestionIndex = 0;  // Reset question index for the next level
+            if (currentLevel <= 5) {
+                document.getElementById("level").textContent = currentLevel; // Update level indicator
+            } else {
+                document.getElementById("badge").textContent = "🎉 Congratulations! You've completed all levels! 🎉"; // End of game
+                document.getElementById("roll-dice").disabled = true; // Disable further rolling
+            }
         }
-    }, 2000);
+    }
+});
+
+function showQuestion() {
+    let num1 = Math.floor(Math.random() * 10) + 1;
+    let num2 = Math.floor(Math.random() * 10) + 1;
+    currentAnswer = num1 + num2;
+
+    // Display the current question
+    document.getElementById("question").textContent = `What is ${num1} + ${num2}?`;
+    document.getElementById("question-box").style.display = "block";
+
+    // Clear previous feedback and answer input
+    document.getElementById("answer").value = "";
+    document.getElementById("feedback").textContent = "";
+    document.getElementById("roll-dice").disabled = true;  // Disable dice until answer is submitted
+    document.getElementById("roll-dice").textContent = "Roll Die to Answer Next Question";
 }
 
-// Function to handle level completion
-function completeLevel() {
-    alert(`Congratulations! You have completed Level ${level}! You've earned a unique badge.`);
-    level++;
-    questionCount = 0;
-    correctAnswers = 0;
+document.getElementById("submit-answer").addEventListener("click", function() {
+    let userAnswer = parseInt(document.getElementById("answer").value);
 
-    if (level > 5) {
-        alert('You have completed all levels! Great job!');
-        exitGame();
+    if (userAnswer === currentAnswer) {
+        document.getElementById("feedback").textContent = "✅ Correct! Now roll the die to continue.";
+        currentQuestionIndex++;
     } else {
-        levelDisplay.innerHTML = `Level ${level}: ${questionTypes[level - 1]}`;
-        generateQuestion();
+        document.getElementById("feedback").textContent = `❌ Incorrect! The correct answer is ${currentAnswer}. Now roll the die to continue.`;
     }
-}
 
-// Function to exit the game
-function exitGame() {
-    window.location.href = 'index.html'; // Redirect to home page or another URL
-}
-
-// Function to handle level transitions and progress
-function handleLevelProgress() {
-    const levels = document.querySelectorAll('.level');
-    levels.forEach((levelElement, index) => {
-        if (index === level - 1) {
-            levelElement.style.backgroundColor = '#d63384'; // Dark pink for current level
-        } else {
-            levelElement.style.backgroundColor = '#f8b400'; // Light pink for other levels
-        }
-    });
-}
-
-// Function to initialize level progress (optional)
-function initializeLevelProgress() {
-    const levelProgressContainer = document.getElementById('level-progress');
-    for (let i = 0; i < 5; i++) {
-        const levelElement = document.createElement('div');
-        levelElement.classList.add('level');
-        levelElement.innerText = `Level ${i + 1}`;
-        levelProgressContainer.appendChild(levelElement);
-    }
-}
-
-// Initialize level progress (call this function once during the game setup)
-initializeLevelProgress();
+    // Enable dice roll button after answering
+    document.getElementById("roll-dice").disabled = false;
+    document.getElementById("roll-dice").textContent = "Roll Die to Answer Next Question";
+});
