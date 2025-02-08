@@ -1,21 +1,9 @@
-import { auth } from "./firebase-config.js";
-import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+document.getElementById("signupForm").addEventListener("submit", function (e) {
+    let password = document.querySelector("input[name='password']").value;
+    let confirmPassword = document.querySelector("input[name='confirm_password']").value;
 
-function createAccount() {
-    let email = document.getElementById("signup-email").value;
-    let password = document.getElementById("signup-password").value;
-
-    createUserWithEmailAndPassword(auth, email, password)
-        .then(() => {
-            document.getElementById("signup-message").innerText = "Account created!";
-            setTimeout(() => window.location.href = "game.html", 1500);
-        })
-        .catch(error => document.getElementById("signup-message").innerText = error.message);
-}
-
-function redirectToLogin() {
-    window.location.href = "index.html";
-}
-
-window.createAccount = createAccount;
-window.redirectToLogin = redirectToLogin;
+    if (password !== confirmPassword) {
+        alert("Passwords do not match!");
+        e.preventDefault(); // Prevent form submission
+    }
+});
