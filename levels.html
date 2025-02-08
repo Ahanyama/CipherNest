@@ -1,0 +1,51 @@
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Adventure Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Instructions Button -->
+    <div id="instructions-btn">Instructions</div>
+
+    <!-- Instructions Panel -->
+    <div id="instructions-panel">
+        <h2>Instructions</h2>
+        <ul>
+            <li>Roll the die to move to the next math question.</li>
+            <li>Answer correctly to move forward, otherwise, the correct answer will be shown.</li>
+            <li>Complete 10 questions per level to earn a badge.</li>
+            <li>Each level has 10 questions.</li>
+        </ul>
+        <button id="close-instructions">Close</button>
+    </div>
+
+    <!-- Level Indicator -->
+    <h1>Level <span id="level">1</span></h1>
+
+    <!-- Game Section -->
+    <div id="game-section">
+        <div id="dice-roll">
+            <button id="roll-dice">Roll Dice</button>
+            <p id="dice-result"></p>
+        </div>
+
+        <div id="question-box">
+            <p id="question"></p>
+            <input type="number" id="answer" placeholder="Your answer">
+            <button id="submit-answer">Submit Answer</button>
+            <p id="feedback"></p>
+        </div>
+    </div>
+
+    <!-- Badge Section -->
+    <div id="badge-section">
+        <h3>Your Badges</h3>
+        <div id="badge"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
