@@ -9,6 +9,7 @@ const rollDiceButton = document.getElementById('roll-dice');
 const instructionsButton = document.getElementById('instructions-btn');
 const exitButton = document.getElementById('exit-btn');
 const levelDisplay = document.getElementById('level');
+const levelHeading = document.getElementById('level-heading');
 const diceResult = document.getElementById('dice-result');
 const questionBox = document.getElementById('question-box');
 const questionElement = document.getElementById('question');
@@ -81,6 +82,35 @@ function generateQuestion(dieRoll) {
                 answer: num1
             };
             break;
+        case 5: // Level 5: Mixed (Addition, Subtraction, Multiplication, Division)
+            const randomOperation = Math.floor(Math.random() * 4);
+            switch (randomOperation) {
+                case 0:
+                    currentQuestion = {
+                        question: `${num1} + ${num2}`,
+                        answer: num1 + num2
+                    };
+                    break;
+                case 1:
+                    currentQuestion = {
+                        question: `${num1} - ${num2}`,
+                        answer: num1 - num2
+                    };
+                    break;
+                case 2:
+                    currentQuestion = {
+                        question: `${num1} * ${num2}`,
+                        answer: num1 * num2
+                    };
+                    break;
+                case 3:
+                    currentQuestion = {
+                        question: `${num1 * num2} ÷ ${num2}`,
+                        answer: num1
+                    };
+                    break;
+            }
+            break;
         default:
             currentQuestion = { question: 'Error', answer: 'N/A' };
     }
@@ -92,6 +122,18 @@ function generateQuestion(dieRoll) {
     // Reset answer input and feedback
     answerInput.value = '';
     feedbackElement.textContent = '';
+
+    // Update the level heading
+    levelHeading.textContent = `Level ${level}: ${questionTypes[level - 1]}`;
+
+    // Highlight the active level
+    document.querySelectorAll('.level').forEach((levelElement, index) => {
+        if (index === level - 1) {
+            levelElement.classList.add('active');
+        } else {
+            levelElement.classList.remove('active');
+        }
+    });
 }
 
 // Function to submit answer and check it
@@ -118,17 +160,41 @@ function submitAnswer() {
 
 // Function to handle level completion
 function completeLevel() {
-    alert(`Congratulations! You have completed Level ${level}! You've earned a unique badge.`);
+    // Display unique badge for each level
+    let badgeMessage = '';
+    switch (level) {
+        case 1:
+            badgeMessage = '🎉 Congratulations! You have completed Level 1 and earned the Addition Badge!';
+            break;
+        case 2:
+            badgeMessage = '🎉 Congratulations! You have completed Level 2 and earned the Subtraction Badge!';
+            break;
+        case 3:
+            badgeMessage = '🎉 Congratulations! You have completed Level 3 and earned the Multiplication Badge!';
+            break;
+        case 4:
+            badgeMessage = '🎉 Congratulations! You have completed Level 4 and earned the Division Badge!';
+            break;
+        case 5:
+            badgeMessage = '🎉 Congratulations! You have completed Level 5 and earned the Mixed Operations Badge!';
+            break;
+    }
+
+    badgeElement.textContent = badgeMessage;
+
+    // Move to next level
     level++;
     questionCount = 0;
     correctAnswers = 0;
 
-    if (level > 4) {
+    if (level > 5) {
         alert('You have completed all levels! Great job!');
         exitGame();
     } else {
-        levelDisplay.innerHTML = `Level ${level}: ${questionTypes[level - 1]}`;
-        generateQuestion();
+        setTimeout(() => {
+            levelHeading.textContent = `Level ${level}: ${questionTypes[level - 1]}`;
+            generateQuestion();
+        }, 3000);
     }
 }
 

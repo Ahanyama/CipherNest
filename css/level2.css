@@ -5,6 +5,7 @@ body {
     color: white;
     text-align: center;
     padding: 20px;
+    position: relative;
 }
 
 /* Button Styling */
@@ -35,16 +36,21 @@ button:hover {
 /* Level Progress Panel */
 .level-progress {
     display: flex;
-    justify-content: flex-start;
-    padding: 10px;
+    flex-direction: column;
+    position: absolute;
+    left: 10px;
+    top: 100px;
+    z-index: 1;
 }
 
 .level {
-    margin: 0 10px;
+    margin: 10px 0;
     padding: 10px;
     background-color: lightpink;
     border-radius: 5px;
     cursor: pointer;
+    display: flex;
+    align-items: center;
 }
 
 .level:hover {
@@ -54,6 +60,11 @@ button:hover {
 /* Active Level Highlight */
 .level.active {
     background-color: #d63384;
+}
+
+/* Flower Icon */
+.flower {
+    margin-right: 10px;
 }
 
 /* Instructions Panel */
@@ -82,4 +93,33 @@ button:hover {
 input {
     padding: 10px;
     font-size: 16px;
+}
+
+/* Top-right buttons */
+.top-right-buttons {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+/* Dice Result */
+#dice-result {
+    font-size: 18px;
+    margin-top: 20px;
+    padding: 10px;
+}
+
+/* Centered Level Heading */
+.level-heading {
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    margin: 20px 0;
+}
+
+/* Badge */
+#badge {
+    margin-top: 20px;
+    font-size: 18px;
+    color: gold;
 }

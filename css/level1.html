@@ -8,18 +8,33 @@
     <link rel="stylesheet" href="level2.css">
 </head>
 <body>
-    <!-- Progress panel (Levels) -->
+    <!-- Progress panel (Levels on the left with flowers) -->
     <div class="level-progress">
-        <div class="level" id="level1">Level 1: ADDITION</div>
-        <div class="level" id="level2">Level 2: SUBTRACTION</div>
-        <div class="level" id="level3">Level 3: MULTIPLICATION</div>
-        <div class="level" id="level4">Level 4: DIVISION</div>
-        <div class="level" id="level5">Level 5: MIXED</div>
+        <div class="level" id="level1">
+            <span class="flower">🌸</span> Level 1: ADDITION
+        </div>
+        <div class="level" id="level2">
+            <span class="flower">🌻</span> Level 2: SUBTRACTION
+        </div>
+        <div class="level" id="level3">
+            <span class="flower">🌼</span> Level 3: MULTIPLICATION
+        </div>
+        <div class="level" id="level4">
+            <span class="flower">🌷</span> Level 4: DIVISION
+        </div>
+        <div class="level" id="level5">
+            <span class="flower">💐</span> Level 5: MIXED
+        </div>
     </div>
 
-    <!-- Instructions and Exit Buttons -->
-    <button id="instructions-btn" class="red-button">Instructions</button>
-    <button id="exit-btn" class="red-button">Exit</button>
+    <!-- Current Level Heading (Centered) -->
+    <div id="level-heading" class="level-heading">Level 1: ADDITION</div>
+
+    <!-- Exit and Instructions Buttons (Top right corner) -->
+    <div class="top-right-buttons">
+        <button id="instructions-btn" class="red-button">Instructions</button>
+        <button id="exit-btn" class="red-button">Exit</button>
+    </div>
 
     <!-- Dice Roll Button -->
     <button id="roll-dice" class="blue-button">Roll Dice</button>
@@ -52,5 +67,4 @@
     <script src="level3.js"></script>
 </body>
 </html>
-
 
