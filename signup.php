@@ -1,29 +1,18 @@
-<?php
-include 'connection.php';
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = trim($_POST["email"]);
-    $password = trim($_POST["password"]);
-
-    if (empty($email) || empty($password)) {
-        die("All fields are required.");
-    }
-
-    // Hash the password
-    $hashed_password = password_hash($password, PASSWORD_BCRYPT);
-
-    // Insert user into database
-    $sql = "INSERT INTO users (email, password) VALUES (?, ?)";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ss", $email, $hashed_password);
-
-    if ($stmt->execute()) {
-        echo "Signup successful! <a href='../frontend/login.html'>Login here</a>";
-    } else {
-        echo "Error: " . $stmt->error;
-    }
-
-    $stmt->close();
-    $conn->close();
-}
-?>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Signup</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Signup</h2>
+        <form action="signup.php" method="POST">
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <button type="submit">Sign Up</button>
+        </form>
+        <p>Already have an account? <a href="login.html">Login</a></p>
+    </div>
+</body>
+</html>
