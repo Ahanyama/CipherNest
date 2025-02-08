@@ -1,7 +1,6 @@
 let currentLevel = 0;
 let currentQuestionIndex = 0;
 let questions = [];
-let currentAnswer = 0;
 let badgeEarned = false;
 
 // Sounds
@@ -25,10 +24,28 @@ function generateQuestions(level) {
     for (let i = 0; i < 10; i++) {
         let num1 = Math.floor(Math.random() * 10) + 1;
         let num2 = Math.floor(Math.random() * 10) + 1;
-        questions.push({
-            question: `What is ${num1} + ${num2}?`,
-            answer: num1 + num2
-        });
+        let questionText = '';
+        let answer = 0;
+
+        if (level === 1) { // Addition
+            questionText = `What is ${num1} + ${num2}?`;
+            answer = num1 + num2;
+        } else if (level === 2) { // Subtraction
+            questionText = `What is ${num1} - ${num2}?`;
+            answer = num1 - num2;
+        } else if (level === 3) { // Multiplication
+            questionText = `What is ${num1} * ${num2}?`;
+            answer = num1 * num2;
+        } else if (level === 4) { // Division
+            questionText = `What is ${num1} ÷ ${num2}?`;
+            answer = num1 / num2;
+        } else if (level === 5) { // Challenge level
+            let operation = Math.random() > 0.5 ? '+' : '-';
+            questionText = `What is ${num1} ${operation} ${num2}?`;
+            answer = operation === '+' ? num1 + num2 : num1 - num2;
+        }
+
+        questions.push({ question: questionText, answer });
     }
     return questions;
 }
@@ -36,7 +53,7 @@ function generateQuestions(level) {
 // Display the next question
 function showNextQuestion() {
     if (currentQuestionIndex < 10) {
-        document.getElementById("question-box").innerText = questions[currentQuestionIndex].question;
+        document.getElementById("question-box").innerText = `${currentQuestionIndex + 1}. ${questions[currentQuestionIndex].question}`;
         document.getElementById("answer-section").classList.remove("hidden");
         document.getElementById("submit-btn").disabled = false;
         document.getElementById("answer").value = "";
@@ -80,9 +97,6 @@ function displayBadgePopup() {
     badgeSound.play();
     document.getElementById("badge-popup").style.display = 'block';
     document.getElementById("level-badge-number").innerText = currentLevel;
-    setTimeout(() => {
-        document.getElementById("badge-popup").style.display = 'none';
-    }, 3000);
 }
 
 // Instructions Modal Functions
@@ -94,8 +108,8 @@ function closeModal() {
     document.getElementById("instructions-modal").style.display = 'none';
 }
 
-// To make level badges clickable and keep track of progress
-document.querySelectorAll('.level').forEach((level, index) => {
-    level.style.cursor = "pointer";
-    level.onclick = () => startGame(index + 1);
-});
+// Exit Game Function
+function exitGame() {
+    alert("Thank you for playing!");
+    window.location.reload();
+}
