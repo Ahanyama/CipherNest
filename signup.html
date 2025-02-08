@@ -3,24 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Account</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Login</title>
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
     <div class="container">
         <div class="form-box">
-            <h2>Create Account</h2>
+            <h2>Login</h2>
             <div class="input-group">
-                <input type="email" id="signup-email" placeholder="Enter Email">
-                <input type="password" id="signup-password" placeholder="Enter Password">
+                <input type="email" id="email" placeholder="Enter Email" required aria-label="Email Address">
+                <input type="password" id="password" placeholder="Enter Password" required aria-label="Password">
             </div>
-            <button onclick="createAccount()">Sign Up</button>
-            <p>Already have an account?</p>
-            <button onclick="redirectToLogin()">Login</button>
-            <p id="signup-message"></p>
+            <button onclick="login()" aria-label="Login">Login</button>
+            <p><a href="reset-password.html" aria-label="Reset Password">Forgot Password?</a></p>
+            <p>Don't have an account?</p>
+            <button onclick="redirectToSignup()" aria-label="Create Account">Create Account</button>
+            <p id="message"></p>
         </div>
     </div>
-    <script src="firebase-config.js"></script>
-    <script src="signup.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
