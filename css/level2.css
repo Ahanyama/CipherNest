@@ -1,7 +1,7 @@
 /* General Styling */
 body {
     font-family: 'Roboto', sans-serif;
-    background: linear-gradient(45deg, #ff7e5f, #feb47b);
+    background-color: #1a1a2e;
     color: white;
     margin: 0;
     padding: 0;
@@ -20,19 +20,19 @@ body {
     align-items: flex-start;
     margin-top: 50px;
     text-align: center;
-    transition: transform 0.3s ease-in-out;
 }
 
-.level {
+.flower {
+    font-size: 24px;
     padding: 10px 20px;
     background-color: #f8b400;
     margin: 10px 0;
     cursor: pointer;
-    transition: transform 0.3s ease-in-out, background-color 0.3s ease;
     border-radius: 5px;
+    transition: transform 0.3s ease-in-out;
 }
 
-.level:hover {
+.flower:hover {
     transform: scale(1.1);
     background-color: #ffa500;
 }
@@ -118,7 +118,7 @@ button:hover {
     }
 }
 
-.level:active {
+.flower:active {
     animation: bounce 0.2s ease-in-out;
 }
 
@@ -151,3 +151,35 @@ button:hover {
         transform: scale(1);
     }
 }
+
+/* Cartoon Animations at the Bottom */
+#cartoon-animations {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.cartoon-animation {
+    width: 100px;
+    height: 100px;
+    margin: 10px;
+    animation: cartoonMove 2s infinite ease-in-out;
+}
+
+/* Cartoon Animation Movement */
+@keyframes cartoonMove {
+    0% {
+        transform: translateX(-20px);
+    }
+    50% {
+        transform: translateX(20px);
+    }
+    100% {
+        transform: translateX(-20px);
+    }
+}
+

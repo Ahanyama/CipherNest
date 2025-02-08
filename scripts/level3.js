@@ -13,6 +13,7 @@ function startGame(level) {
     currentQuestionIndex = 0;
     badgeEarned = false;
     questions = generateQuestions(level); // Generate level-specific questions
+    document.getElementById("level-heading").innerText = `Level ${level}: ${getLevelName(level)}`;
     showNextQuestion();
     document.getElementById("badge-popup").style.display = 'none';
     document.getElementById("dice-roll").style.display = 'block';
@@ -50,6 +51,15 @@ function generateQuestions(level) {
     return questions;
 }
 
+// Get level name
+function getLevelName(level) {
+    if (level === 1) return 'Addition';
+    if (level === 2) return 'Subtraction';
+    if (level === 3) return 'Multiplication';
+    if (level === 4) return 'Division';
+    return 'Challenge';
+}
+
 // Display the next question
 function showNextQuestion() {
     if (currentQuestionIndex < 10) {
@@ -69,47 +79,29 @@ function checkAnswer() {
         currentQuestionIndex++;
         showNextQuestion();
     } else {
-        alert(`Wrong! The correct answer was ${questions[currentQuestionIndex].answer}.`);
-        document.getElementById("submit-btn").disabled = true;
+        alert(`Wrong answer! The correct answer was ${questions[currentQuestionIndex].answer}`);
     }
 }
 
-// Function to roll the dice and start the next question
-function rollDice() {
-    rollSound.play();
-    document.getElementById("roll-btn").disabled = true;
-    setTimeout(() => {
-        document.getElementById("roll-btn").disabled = false;
-        showNextQuestion();
-    }, 1000);
-}
-
-// Function to complete a level
+// Function to complete the level and display the badge popup
 function completeLevel() {
-    if (!badgeEarned) {
-        badgeEarned = true;
-        displayBadgePopup();
-    }
-}
-
-// Display the badge popup
-function displayBadgePopup() {
+    badgeEarned = true;
     badgeSound.play();
     document.getElementById("badge-popup").style.display = 'block';
     document.getElementById("level-badge-number").innerText = currentLevel;
 }
 
-// Instructions Modal Functions
+// Function to open the instructions modal
 function openModal() {
-    document.getElementById("instructions-modal").style.display = 'flex';
+    document.getElementById("instructions-modal").style.display = 'block';
 }
 
+// Function to close the instructions modal
 function closeModal() {
     document.getElementById("instructions-modal").style.display = 'none';
 }
 
-// Exit Game Function
+// Function to exit the game
 function exitGame() {
-    alert("Thank you for playing!");
-    window.location.reload();
+    window.location.href = '/'; // Redirect to home page
 }
