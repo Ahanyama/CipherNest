@@ -3,67 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Math Dice Game</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>Math Game</title>
     <link rel="stylesheet" href="level2.css">
 </head>
 <body>
 
-    <!-- Main Game Container -->
-    <div id="game-container" class="fade-in">
-        
-        <!-- Left Side Level Progress (Flowers) -->
-        <div id="level-map">
-            <h1>Level Progress</h1>
-            <div id="level-1" class="flower" onclick="startGame(1)">🌸 Level 1</div>
-            <div id="level-2" class="flower" onclick="startGame(2)">🌺 Level 2</div>
-            <div id="level-3" class="flower" onclick="startGame(3)">🌼 Level 3</div>
-            <div id="level-4" class="flower" onclick="startGame(4)">🌻 Level 4</div>
-            <div id="level-5" class="flower" onclick="startGame(5)">🌹 Level 5</div>
-        </div>
+    <h1>Math Game</h1>
 
-        <!-- Right Side Dice Roll and Question Section -->
-        <div id="dice-roll">
-            <h2 id="level-heading">Level 1: Addition</h2>
-            <h3 id="question-box">Roll the dice to start!</h3>
-            <button id="roll-btn" class="btn btn-primary" onclick="rollDice()">Roll Dice</button>
-            <div id="answer-section" class="hidden">
-                <input type="text" id="answer" placeholder="Your Answer" class="btn">
-                <button id="submit-btn" class="btn btn-success" onclick="checkAnswer()">Submit Answer</button>
-            </div>
-            <p id="dice-message" class="hidden">Click the dice to go to the next question!</p>
-        </div>
+    <!-- Level Progress -->
+    <div id="level-progress"></div>
 
-        <!-- Instructions Modal -->
-        <div id="instructions-modal" class="modal">
-            <div class="modal-content">
-                <h3>Instructions</h3>
-                <ul>
-                    <li>Roll the dice to start each level.</li>
-                    <li>Answer 10 math questions to earn a badge for each level.</li>
-                    <li>Click the dice to move to the next question.</li>
-                </ul>
-                <button class="btn btn-primary" onclick="closeModal()">Close</button>
-            </div>
-        </div>
-        <button id="instructions-btn" class="btn btn-info" onclick="openModal()">Instructions</button>
+    <!-- Level Display -->
+    <div id="level">Level 1: ADDITION</div>
 
-        <!-- Badge Popup -->
-        <div id="badge-popup" class="hidden">
-            <div id="badge-container">
-                <h2>Congratulations!</h2>
-                <p>You earned a unique badge for Level <span id="level-badge-number">1</span>!</p>
-            </div>
-        </div>
+    <!-- Dice Roll Button -->
+    <button id="roll-dice" class="button">Roll Dice</button>
 
-        <!-- Exit Game Button -->
-        <button id="exit-btn" class="btn btn-danger" onclick="exitGame()">Exit Game</button>
+    <!-- Dice Result Display -->
+    <div id="dice-result"></div>
+
+    <!-- Question Box -->
+    <div id="question-box" style="display:none;">
+        <div id="question"></div>
+        <input type="number" id="answer" placeholder="Your Answer">
+        <button id="submit-answer" class="button">Submit Answer</button>
+        <div id="feedback"></div>
     </div>
 
-    <!-- Cartoon Animations at the Bottom -->
-    <div id="cartoon-animations">
-        <img src="cartoon_character1.gif" class="cartoon-animation" alt="Cartoon Character 1">
+    <!-- Instructions Button -->
+    <button id="instructions-btn" class="button">Instructions</button>
+
+    <!-- Exit Button -->
+    <button id="exit-btn" class="button">Exit</button>
+
+    <!-- Instructions Panel -->
+    <div id="instructions-panel" style="display:none;">
+        <div id="instructions-content">
+            <h3>Game Instructions</h3>
+            <p>1. Roll the dice to generate a question.</p>
+            <p>2. Answer the question correctly to proceed.</p>
+            <p>3. After 10 questions, you will earn a badge!</p>
+            <button id="close-instructions" class="button">Close Instructions</button>
+        </div>
     </div>
+
+    <!-- Animated Cartoon -->
+    <div id="animated-cartoon"></div>
 
     <script src="level3.js"></script>
 </body>

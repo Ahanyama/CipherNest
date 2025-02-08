@@ -1,107 +1,168 @@
-let currentLevel = 0;
-let currentQuestionIndex = 0;
-let questions = [];
-let badgeEarned = false;
+// Game Variables
+let level = 1;
+let questionCount = 0;
+let correctAnswers = 0;
+let currentQuestion = {};
+let questionsAnswered = 0;
 
-// Sounds
-const rollSound = new Audio('path/to/roll-sound.mp3');
-const badgeSound = new Audio('path/to/badge-sound.mp3');
+// Elements
+const rollDiceButton = document.getElementById('roll-dice');
+const instructionsButton = document.getElementById('instructions-btn');
+const exitButton = document.getElementById('exit-btn');
+const levelDisplay = document.getElementById('level');
+const diceResult = document.getElementById('dice-result');
+const questionBox = document.getElementById('question-box');
+const questionElement = document.getElementById('question');
+const answerInput = document.getElementById('answer');
+const submitAnswerButton = document.getElementById('submit-answer');
+const feedbackElement = document.getElementById('feedback');
+const badgeElement = document.getElementById('badge');
+const instructionsPanel = document.getElementById('instructions-panel');
+const closeInstructionsButton = document.getElementById('close-instructions');
 
-// Function to start the game and load questions for each level
-function startGame(level) {
-    currentLevel = level;
-    currentQuestionIndex = 0;
-    badgeEarned = false;
-    questions = generateQuestions(level); // Generate level-specific questions
-    document.getElementById("level-heading").innerText = `Level ${level}: ${getLevelName(level)}`;
-    showNextQuestion();
-    document.getElementById("badge-popup").style.display = 'none';
-    document.getElementById("dice-roll").style.display = 'block';
+// Question types
+const questionTypes = ['ADDITION', 'SUBTRACTION', 'MULTIPLICATION', 'DIVISION'];
+
+// Set initial level display
+levelDisplay.innerHTML = `Level ${level}: ${questionTypes[level - 1]}`;
+
+// Event listeners
+rollDiceButton.addEventListener('click', rollDice);
+instructionsButton.addEventListener('click', openInstructions);
+exitButton.addEventListener('click', exitGame);
+submitAnswerButton.addEventListener('click', submitAnswer);
+closeInstructionsButton.addEventListener('click', closeInstructions);
+
+// Function to open instructions modal
+function openInstructions() {
+    instructionsPanel.style.display = 'flex';
 }
 
-// Generate questions for each level
-function generateQuestions(level) {
-    let questions = [];
-    for (let i = 0; i < 10; i++) {
-        let num1 = Math.floor(Math.random() * 10) + 1;
-        let num2 = Math.floor(Math.random() * 10) + 1;
-        let questionText = '';
-        let answer = 0;
+// Function to close instructions modal
+function closeInstructions() {
+    instructionsPanel.style.display = 'none';
+}
 
-        if (level === 1) { // Addition
-            questionText = `What is ${num1} + ${num2}?`;
-            answer = num1 + num2;
-        } else if (level === 2) { // Subtraction
-            questionText = `What is ${num1} - ${num2}?`;
-            answer = num1 - num2;
-        } else if (level === 3) { // Multiplication
-            questionText = `What is ${num1} * ${num2}?`;
-            answer = num1 * num2;
-        } else if (level === 4) { // Division
-            questionText = `What is ${num1} ÷ ${num2}?`;
-            answer = num1 / num2;
-        } else if (level === 5) { // Challenge level
-            let operation = Math.random() > 0.5 ? '+' : '-';
-            questionText = `What is ${num1} ${operation} ${num2}?`;
-            answer = operation === '+' ? num1 + num2 : num1 - num2;
+// Function to handle the die roll and show a new question
+function rollDice() {
+    // Simulate a die roll (1 to 6)
+    const dieRoll = Math.floor(Math.random() * 6) + 1;
+    diceResult.textContent = `You rolled a ${dieRoll}`;
+
+    // Generate a new question based on the current level
+    generateQuestion(dieRoll);
+}
+
+// Function to generate questions based on level and die roll
+function generateQuestion(dieRoll) {
+    questionBox.style.display = 'block';
+    const num1 = Math.floor(Math.random() * 10) + 1;
+    const num2 = Math.floor(Math.random() * 10) + 1;
+
+    // Based on the level, generate different question types
+    switch (level) {
+        case 1: // Level 1: Addition
+            currentQuestion = {
+                question: `${num1} + ${num2}`,
+                answer: num1 + num2
+            };
+            break;
+        case 2: // Level 2: Subtraction
+            currentQuestion = {
+                question: `${num1} - ${num2}`,
+                answer: num1 - num2
+            };
+            break;
+        case 3: // Level 3: Multiplication
+            currentQuestion = {
+                question: `${num1} * ${num2}`,
+                answer: num1 * num2
+            };
+            break;
+        case 4: // Level 4: Division
+            currentQuestion = {
+                question: `${num1 * num2} ÷ ${num2}`,
+                answer: num1
+            };
+            break;
+        default:
+            currentQuestion = { question: 'Error', answer: 'N/A' };
+    }
+
+    // Display the question
+    questionElement.textContent = `Question ${questionCount + 1}: ${currentQuestion.question}`;
+    questionCount++;
+
+    // Reset answer input and feedback
+    answerInput.value = '';
+    feedbackElement.textContent = '';
+}
+
+// Function to submit answer and check it
+function submitAnswer() {
+    const userAnswer = parseInt(answerInput.value);
+    if (userAnswer === currentQuestion.answer) {
+        correctAnswers++;
+        feedbackElement.textContent = 'Correct! Moving to the next question.';
+        feedbackElement.style.color = 'green';
+    } else {
+        feedbackElement.textContent = `Incorrect! The correct answer is ${currentQuestion.answer}.`;
+        feedbackElement.style.color = 'red';
+    }
+
+    // Move to next question after a small delay
+    setTimeout(() => {
+        if (questionCount === 10) {
+            completeLevel();
+        } else {
+            rollDice();
         }
-
-        questions.push({ question: questionText, answer });
-    }
-    return questions;
+    }, 2000);
 }
 
-// Get level name
-function getLevelName(level) {
-    if (level === 1) return 'Addition';
-    if (level === 2) return 'Subtraction';
-    if (level === 3) return 'Multiplication';
-    if (level === 4) return 'Division';
-    return 'Challenge';
-}
-
-// Display the next question
-function showNextQuestion() {
-    if (currentQuestionIndex < 10) {
-        document.getElementById("question-box").innerText = `${currentQuestionIndex + 1}. ${questions[currentQuestionIndex].question}`;
-        document.getElementById("answer-section").classList.remove("hidden");
-        document.getElementById("submit-btn").disabled = false;
-        document.getElementById("answer").value = "";
-    } else {
-        completeLevel();
-    }
-}
-
-// Function to check the player's answer
-function checkAnswer() {
-    let answer = parseInt(document.getElementById("answer").value);
-    if (answer === questions[currentQuestionIndex].answer) {
-        currentQuestionIndex++;
-        showNextQuestion();
-    } else {
-        alert(`Wrong answer! The correct answer was ${questions[currentQuestionIndex].answer}`);
-    }
-}
-
-// Function to complete the level and display the badge popup
+// Function to handle level completion
 function completeLevel() {
-    badgeEarned = true;
-    badgeSound.play();
-    document.getElementById("badge-popup").style.display = 'block';
-    document.getElementById("level-badge-number").innerText = currentLevel;
-}
+    alert(`Congratulations! You have completed Level ${level}! You've earned a unique badge.`);
+    level++;
+    questionCount = 0;
+    correctAnswers = 0;
 
-// Function to open the instructions modal
-function openModal() {
-    document.getElementById("instructions-modal").style.display = 'block';
-}
-
-// Function to close the instructions modal
-function closeModal() {
-    document.getElementById("instructions-modal").style.display = 'none';
+    if (level > 5) {
+        alert('You have completed all levels! Great job!');
+        exitGame();
+    } else {
+        levelDisplay.innerHTML = `Level ${level}: ${questionTypes[level - 1]}`;
+        generateQuestion();
+    }
 }
 
 // Function to exit the game
 function exitGame() {
-    window.location.href = '/'; // Redirect to home page
+    window.location.href = 'index.html'; // Redirect to home page or another URL
 }
+
+// Function to handle level transitions and progress
+function handleLevelProgress() {
+    const levels = document.querySelectorAll('.level');
+    levels.forEach((levelElement, index) => {
+        if (index === level - 1) {
+            levelElement.style.backgroundColor = '#d63384'; // Dark pink for current level
+        } else {
+            levelElement.style.backgroundColor = '#f8b400'; // Light pink for other levels
+        }
+    });
+}
+
+// Function to initialize level progress (optional)
+function initializeLevelProgress() {
+    const levelProgressContainer = document.getElementById('level-progress');
+    for (let i = 0; i < 5; i++) {
+        const levelElement = document.createElement('div');
+        levelElement.classList.add('level');
+        levelElement.innerText = `Level ${i + 1}`;
+        levelProgressContainer.appendChild(levelElement);
+    }
+}
+
+// Initialize level progress (call this function once during the game setup)
+initializeLevelProgress();
