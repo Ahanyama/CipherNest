@@ -1,5 +1,5 @@
 <?php
-include 'db_connect.php';  // Connect to the database
+include 'connection.php';  // Connect to the database
 session_start();
 
 $user_id = $_SESSION['user_id'];  // Get logged-in user's ID
