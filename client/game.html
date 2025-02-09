@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to the Math Game!</h1>
+        <button onclick="logout()">Logout</button>
+        <div id="level-heading"></div>
+        <div id="dice-result"></div>
+        <button id="roll-dice">Roll Dice</button>
+        <button id="instructions-btn">Instructions</button>
+        <button id="exit-btn">Exit</button>
+        <div id="question-box" style="display: none;">
+            <div id="question"></div>
+            <input type="number" id="answer" placeholder="Your answer" required>
+            <button id="submit-answer">Submit Answer</button>
+            <div id="feedback"></div>
+        </div>
+        <div id="badge"></div>
+        <div id="instructions-panel" style="display: none;">
+            <h2>Instructions</h2>
+            <ol>
+                <li>Roll the dice to get the next question.</li>
+                <li>Answer the question.</li>
+                <li>Move to the next question once answered correctly.</li>
+                <li>Complete all 10 questions in a level to earn a badge.</li>
+            </ol>
+            <button id="close-instructions">Close</button>
+        </div>
+    </div>
+    <script src="js/level3.js"></script>
+</body>
+</html>

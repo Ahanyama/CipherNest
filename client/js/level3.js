@@ -3,6 +3,7 @@ let level = 1;
 let questionCount = 0;
 let correctAnswers = 0;
 let currentQuestion = {};
+let questions = [];
 
 // Elements
 const rollDiceButton = document.getElementById('roll-dice');
@@ -45,95 +46,18 @@ function rollDice() {
     // Simulate a die roll (1 to 6)
     const dieRoll = Math.floor(Math.random() * 6) + 1;
     diceResult.textContent = `You rolled a ${dieRoll}`;
-
     // Generate a new question based on the current level
-    generateQuestion(dieRoll);
-}
-
-// Function to generate questions based on level and die roll
-function generateQuestion(dieRoll) {
-    questionBox.style.display = 'block';
-    const num1 = Math.floor(Math.random() * 10) + 1;
-    const num2 = Math.floor(Math.random() * 10) + 1;
-
-    // Based on the level, generate different question types
-    switch (level) {
-        case 1: // Level 1: Addition
-            currentQuestion = {
-                question: `${num1} + ${num2}`,
-                answer: num1 + num2
-            };
-            break;
-        case 2: // Level 2: Subtraction
-            currentQuestion = {
-                question: `${num1} - ${num2}`,
-                answer: num1 - num2
-            };
-            break;
-        case 3: // Level 3: Multiplication
-            currentQuestion = {
-                question: `${num1} * ${num2}`,
-                answer: num1 * num2
-            };
-            break;
-        case 4: // Level 4: Division
-            currentQuestion = {
-                question: `${num1 * num2} ÷ ${num2}`,
-                answer: num1
-            };
-            break;
-        case 5: // Level 5: Mixed (Addition, Subtraction, Multiplication, Division)
-            const randomOperation = Math.floor(Math.random() * 4);
-            switch (randomOperation) {
-                case 0:
-                    currentQuestion = {
-                        question: `${num1} + ${num2}`,
-                        answer: num1 + num2
-                    };
-                    break;
-                case 1:
-                    currentQuestion = {
-                        question: `${num1} - ${num2}`,
-                        answer: num1 - num2
-                    };
-                    break;
-                case 2:
-                    currentQuestion = {
-                        question: `${num1} * ${num2}`,
-                        answer: num1 * num2
-                    };
-                    break;
-                case 3:
-                    currentQuestion = {
-                        question: `${num1 * num2} ÷ ${num2}`,
-                        answer: num1
-                    };
-                    break;
-            }
-            break;
-        default:
-            currentQuestion = { question: 'Error', answer: 'N/A' };
+    if (questionCount < questions.length) {
+        currentQuestion = questions[questionCount];
+        questionElement.textContent = `Question ${questionCount + 1}: ${currentQuestion.question}`;
+        questionBox.style.display = 'block';
+        questionCount++;
+        // Reset answer input and feedback
+        answerInput.value = '';
+        feedbackElement.textContent = '';
+    } else {
+        feedbackElement.textContent = 'No more questions in this level.';
     }
-
-    // Display the question
-    questionElement.textContent = `Question ${questionCount + 1}: ${currentQuestion.question}`;
-    questionCount++;
-
-    // Reset answer input and feedback
-    answerInput.value = '';
-    feedbackElement.textContent = '';
-
-    // Update the level heading
-    levelHeading.textContent = `Level ${level}: ${questionTypes[level - 1]}`;
-
-    // Highlight the active level
-    document.querySelectorAll('.level').forEach((levelElement, index) => {
-        if (index === level - 1) {
-            levelElement.classList.add('active');
-        } else {
-            levelElement.classList.remove('active');
-        }
-    });
 }
 
 // Function to submit answer and check it
@@ -147,7 +71,6 @@ function submitAnswer() {
         feedbackElement.textContent = `Incorrect! The correct answer is ${currentQuestion.answer}.`;
         feedbackElement.style.color = 'red';
     }
-
     // Move to next question after a small delay
     setTimeout(() => {
         if (questionCount === 10) {
@@ -179,21 +102,18 @@ function completeLevel() {
             badgeMessage = '🎉 Congratulations! You have completed Level 5 and earned the Mixed Operations Badge!';
             break;
     }
-
     badgeElement.textContent = badgeMessage;
-
     // Move to next level
     level++;
     questionCount = 0;
     correctAnswers = 0;
-
     if (level > 5) {
         alert('You have completed all levels! Great job!');
         exitGame();
     } else {
         setTimeout(() => {
             levelHeading.textContent = `Level ${level}: ${questionTypes[level - 1]}`;
-            generateQuestion();
+            fetchQuestions(level);
         }, 3000);
     }
 }
@@ -202,3 +122,35 @@ function completeLevel() {
 function exitGame() {
     window.location.href = 'index.html'; // Redirect to home page or another URL
 }
+
+// Function to fetch questions for a given level
+function fetchQuestions(level) {
+    fetch(`/api/questions/fetch?level=${level}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+    })
+    .then(response => response.json())
+    .then(data => {
+        questions = data;
+        questionCount = 0;
+        rollDice();
+    })
+    .catch(error => console.error('Error fetching questions:', error));
+}
+
+// Function to redirect to the game page with a specific level
+function redirectToGame(selectedLevel) {
+    level = selectedLevel;
+    levelHeading.textContent = `Level ${level}: ${questionTypes[level - 1]}`;
+    fetchQuestions(level);
+    window.location.href = "game.html";
+}
+
+// Fetch questions for the current level when the game page loads
+document.addEventListener('DOMContentLoaded', () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        window.location.href = 'index.html';
+    }
+    fetchQuestions(level);
+});

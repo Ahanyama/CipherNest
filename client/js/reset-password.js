@@ -1,11 +1,9 @@
-function verifyOTP() {
+function sendOTP() {
     let email = document.getElementById("reset-email").value;
-    let otp = document.getElementById("otp").value;
-
-    fetch("http://localhost/verify-otp.php", {
+    fetch("/api/auth/send-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, otp }),
+        body: JSON.stringify({ email }),
     })
     .then(response => response.json())
     .then(data => document.getElementById("reset-message").innerText = data.message || data.error)
@@ -16,16 +14,22 @@ function resetPassword() {
     let email = document.getElementById("reset-email").value;
     let otp = document.getElementById("otp").value;
     let password = document.getElementById("new-password").value;
-
-    fetch("http://localhost/reset-password.php", {
+    fetch("/api/auth/reset-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, otp, password }),
     })
     .then(response => response.json())
-    .then(data => document.getElementById("reset-message").innerText = data.message || data.error)
+    .then(data => {
+        document.getElementById("reset-message").innerText = data.message || data.error;
+        if (data.message) {
+            document.getElementById("reset-form").reset();
+        }
+    })
     .catch(error => document.getElementById("reset-message").innerText = "Something went wrong!");
 }
 
-window.verifyOTP = verifyOTP;
-window.resetPassword = resetPassword;
+document.getElementById('reset-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    resetPassword();
+});
